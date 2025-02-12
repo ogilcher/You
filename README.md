@@ -1,5 +1,5 @@
 # You
- ##**You** is a resourceful, all-in-one app designed to be an extension of yourself—streamlining daily tasks
+ **You** is a resourceful, all-in-one app designed to be an extension of yourself—streamlining daily tasks
 and boosting productivity. Whether you’re managing your health, finances, education, mental wellness, 
 pet care, or just your everyday schedule, You consolidates all these features into a single, personalized experience.
 
