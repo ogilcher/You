@@ -3,7 +3,7 @@
 and boosting productivity. Whether you’re managing your health, finances, education, mental wellness, 
 pet care, or just your everyday schedule, You consolidates all these features into a single, personalized experience.
 
-## Features 💡
+## **Features** 💡
 * Health & Fitness: Medicine reminders, calorie tracking, workout logs, and more.
 * Finance: Expense tracking, budgeting tools, financial calculators, and insights.
 * Education: Flashcards, study planners, quizzes, and interactive learning aids.
@@ -11,3 +11,9 @@ pet care, or just your everyday schedule, You consolidates all these features in
 * Pet Care: Quick pet age calculators, care tips, and emergency guides.
 * Productivity: Task lists, habit trackers, Pomodoro timers, and scheduling tools.
 * Customization: Personalize your app with custom wallpapers, themes, and shortcut configurations.
+
+## **Technology Stack 💻**
+* **SwiftUI**: For a modern, responsive, and intuitive user interface.
+* **Firebase**: For authentication and cloud-based services.
+* **SwiftData**: For local data persistence.
+* **Swift**: The core programming language used to develop the app.
