@@ -17,3 +17,17 @@ pet care, or just your everyday schedule, You consolidates all these features in
 * **Firebase**: For authentication and cloud-based services.
 * **SwiftData**: For local data persistence.
 * **Swift**: The core programming language used to develop the app.
+
+## **Contribution 👥**
+Contributions are welcome! If you have suggestions, bug fixes, or new feature ideas, 
+please open an issue or submit a pull request. Make sure to follow the contribution 
+guidelines outlined in the repository.
+
+## **License 📃**
+This project is licensed under the MIT License.
+
+##
+**You** is designed to simplify your life—providing a powerful suite of tools for busy individuals. Download and 
+explore a personalized experience that keeps you organized, healthy, and on track!
+
+Feel free to adjust any sections to match your project details and personal preferences. Enjoy building and sharing You!
