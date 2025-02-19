@@ -178,7 +178,7 @@ struct CategoryEditor : View {
                                     color: allCategories[index].color,
                                     destination: allCategories[index].destination
                                 )
-                                context.insert(newCategory) // ✅ Insert new instance instead of modifying query result
+                                context.insert(newCategory) //  Insert new instance instead of modifying query result
                             },
                             label: {
                                 HStack(spacing: 20) {
