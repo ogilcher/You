@@ -13,162 +13,202 @@ final class SignInViewModel : ObservableObject {
     @Published var password = ""
     
     func signIn() async throws {
-        guard !email.isEmpty, !password.isEmpty else {
-            print("No email or password found.")
-            return
-        }
-        
         try await AuthenticationManager.shared.signInUser(email: email, password: password)
     }
 }
 
+final class SignInFocusables: ObservableObject {
+    enum FocusableField: Hashable, CaseIterable {
+        case email, password
+    }
+}
+
 struct SignInView : View {
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = SignInViewModel()
-    
-    @State private var showingPassword = false
     @Binding var showSignInView : Bool
+    
+    @FocusState private var focusedField: SignInFocusables.FocusableField?
     
     var body : some View {
         NavigationStack {
-            VStack (spacing: 20) {
-                // Title text
-                Text("Sign In")
-                    .font(.system(size: 35, weight: .bold))
-                    .foregroundStyle(.white)
-                    .padding(.bottom, 20)
-                    .padding(.top, 10)
-                
-                // Email section
-                VStack (alignment: .leading, spacing: 2) {
-                    Text("Email")
-                    TextField("", text: $viewModel.email)
-                        .autocorrectionDisabled(true)
-                        .textInputAutocapitalization(.never)
+            ZStack (alignment: .center) {
+                VStack (spacing: 20) {
+                    // Email and Password Text Fields
+                    formattedSignInEmailField(desiredValue: "Email address", viewModelValue: $viewModel.email, focusedField: $focusedField, focusableValue: SignInFocusables.FocusableField.email, parent: self)
+                    formattedSignInPasswordField(desiredValue: "Password", viewModelValue: $viewModel.password, focusedField: $focusedField, focusableValue: SignInFocusables.FocusableField.password, parent: self)
                     
-                        .frame(width: 250)
-                        .background(Color.gray.opacity(0.4))
-                        .clipShape(
-                            RoundedRectangle(cornerRadius: 8)
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(.white, lineWidth: 1)
-                        )
-                }
-                .font(.system(size: 18, weight: .semibold))
-                .foregroundStyle(.white)
-                
-                // Password Section
-                VStack (alignment: .leading, spacing: 2) {
-                    Text("Password")
-                    
-                    Group {
-                        if showingPassword {
-                            TextField("", text: $viewModel.password)
-                        } else {
-                            SecureField("", text: $viewModel.password)
+                    NavigationLink(
+                        destination: self.navigationBarBackButtonHidden(),
+                        label: {
+                            Text("Forgot password?")
+                                .foregroundStyle(.yellow)
+                                .font(.system(size: 14, weight: .semibold))
+                                .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        
-                    }
-                    .autocorrectionDisabled(true)
-                    .textInputAutocapitalization(.never)
+                    )
+                    .padding(.horizontal, 15)
                     
-                    .frame(width: 250)
-                    .background(Color.gray.opacity(0.4))
-                    .clipShape(
-                        RoundedRectangle(cornerRadius: 8)
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(.white, lineWidth: 1)
-                    )
-                }
-                .font(.system(size: 18, weight: .semibold))
-                .foregroundStyle(.white)
-                
-                // TODO: Add sign in options
-                
-                // Show password checkbox
-                HStack {
                     Button(
                         action: {
-                            showingPassword.toggle()
-                        }, label: {
-                            Image(systemName: showingPassword ? "checkmark.square" : "square")
+                            submit()
+                        },
+                        label: {
+                            Text("Log in")
                         }
                     )
-                    Text("Show Password")
+                    .fontWeight(.semibold)
+                    .foregroundStyle(viewModel.email.isEmpty || viewModel.password.isEmpty ? .white.opacity(0.4) : .white)
+                    .frame(width: 350, height: 55)
+                    .background(viewModel.email.isEmpty || viewModel.password.isEmpty ? .blue.opacity(0.4) : .blue)
+                    .clipShape(.rect(cornerRadius: 40))
+                    
+                    Text("or")
+                        .font(.system(size: 18))
+                        .foregroundStyle(.gray)
+                    
+                    HStack { // Alternative sign-up option (e.g., Apple Sign-In)
+                        Image(systemName: "apple.logo")
+                            .foregroundStyle(Color(uiColor: UIColor.systemBackground))
+                            .frame(width: 45, height: 45)
+                            .background(.primary)
+                            .clipShape(Circle())
+                    }
+                    
                     Spacer()
                 }
-                .foregroundStyle(.white)
-                .font(.system(size: 18, weight: .semibold))
-                
-                // Sign in button
-                Button {
-                    Task {
-                        do {
-                            try await viewModel.signIn()
-                            showSignInView = false
-                        } catch {
-                            print(error)
-                        }
-                    }
-                } label: {
-                    Text("Sign In")
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundStyle(.white)
-                        .frame(height: 55)
-                        .frame(maxWidth: 100)
-                        .background(Color.blue)
-                        .clipShape(.rect(cornerRadius: 10))
-                        .padding(.top, 20)
-                }
-                
-                // Forgot password button
-                NavigationLink(
-                    destination: SignInView(showSignInView: $showSignInView).navigationBarBackButtonHidden(true),
-                    label: {
-                        Text("Forgot password?")
-                            .font(.system(size: 18, weight: .semibold))
-                    }
-                )
-                
-                // Sign up button
-                HStack {
-                    Text("Don't have an account?")
-                        .font(.system(size: 14, weight: .regular, design: .default))
-                        .foregroundStyle(.white)
-                    NavigationLink(
-                        destination: SignUpEmailView(showSignInView: $showSignInView).navigationBarBackButtonHidden(true),
-                        label: {
-                            Text("Sign up")
-                                .foregroundStyle(.blue)
-                                .font(.system(size: 14, weight: .regular, design: .default))
-                        }
-                    )
-                }
-                
-                Spacer()
-                
             }
-            .padding(.horizontal, 50)
-            .padding(.vertical)
-            .frame(
-                width: 350,
-                height: 450
-            )
-            .background(.white.quinary)
-            .clipShape(.rect(cornerRadius: 25))
-            .multilineTextAlignment(.center)
+            .padding()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(.voidBlack.gradient)
+            .navigationTitle("Log in")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItemGroup(placement: .topBarLeading) {
+                    
+                    Button(action: { dismiss() }, label: { Image(systemName: "chevron.left") })
+                        .foregroundStyle(.white)
+                }
+            }
+        }
+    }
+    
+    func focusNextField() {
+        switch focusedField {
+        case .email: focusedField = .password
+        case .password: focusedField = nil
+        case .none:  break
+        }
+    }
+    
+    func submit() {
+        Task {
+            do {
+                try await viewModel.signIn()
+                showSignInView = false
+            } catch {
+                print(error)
+            }
         }
     }
 }
 
+struct formattedSignInEmailField : View {
+    var desiredValue: String
+    @Binding var viewModelValue: String
+    var focusedField: FocusState<SignInFocusables.FocusableField?>.Binding
+    var focusableValue: SignInFocusables.FocusableField
+    var parent: SignInView
+    
+    var body: some View {
+        HStack {
+            VStack {
+                if !viewModelValue.isEmpty {
+                    Text(desiredValue)
+                        .font(.system(size: 10))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                TextField(desiredValue, text: $viewModelValue)
+                    .focused(focusedField, equals: focusableValue)
+                    .keyboardType(.emailAddress)
+                    .submitLabel(.next)
+                    .font(.system(size: 16, weight: .semibold))
+                    .textInputAutocapitalization(.never)
+                    .disableAutocorrection(true)
+                    .onSubmit {
+                        parent.focusNextField()
+                    }
+            }
+        }
+        .padding()
+        .frame(width: 350, height: 50)
+        .clipShape(.rect(cornerRadius: 10))
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(focusedField.wrappedValue == focusableValue ? Color.white : Color.white.opacity(0.4), lineWidth: 2)
+        )
+    }
+}
+
+struct formattedSignInPasswordField : View {
+    var desiredValue: String
+    @Binding var viewModelValue: String
+    var focusedField: FocusState<SignInFocusables.FocusableField?>.Binding
+    var focusableValue: SignInFocusables.FocusableField
+    var parent: SignInView
+    
+    @State private var isPasswordRevealed: Bool = false
+    
+    var body: some View {
+        HStack {
+            VStack {
+                if !viewModelValue.isEmpty {
+                    Text(desiredValue)
+                        .font(.system(size: 10))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                Group {
+                    if isPasswordRevealed {
+                        TextField(desiredValue, text: $viewModelValue)
+                            .focused(focusedField, equals: focusableValue)
+                            .font(.system(size: 16, weight: .semibold))
+                            .textInputAutocapitalization(.never)
+                            .disableAutocorrection(true)
+                            .onSubmit {
+                                parent.submit()
+                            }
+                    } else {
+                        SecureField(desiredValue, text: $viewModelValue)
+                            .focused(focusedField, equals: focusableValue)
+                            .font(.system(size: 16, weight: .semibold))
+                            .textInputAutocapitalization(.never)
+                            .disableAutocorrection(true)
+                            .onSubmit {
+                                parent.submit()
+                            }
+                    }
+                }
+            }
+            Spacer()
+            Button { isPasswordRevealed.toggle() } label: {
+                Image(systemName: isPasswordRevealed ? "eye.slash" : "eye")
+                    .foregroundStyle(.gray)
+                    .font(.system(size: 15, weight: .bold))
+            }
+        }
+        .padding()
+        .frame(width: 350, height: 50)
+        .clipShape(.rect(cornerRadius: 10))
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(focusedField.wrappedValue == focusableValue ? Color.white : Color.white.opacity(0.4), lineWidth: 2)
+        )
+    }
+}
+
+
 #Preview {
-    VStack {
+    NavigationStack {
         SignInView(showSignInView: .constant(true))
     }
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .ignoresSafeArea()
-    .background(.black.gradient)
 }

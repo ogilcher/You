@@ -6,73 +6,78 @@
 //
 
 import SwiftUI
-
+import SwiftData
 
 struct WelcomeView2 : View {
-    let alex = "🦊"
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) var context
     
-    @State var fName : String = ""
-    @State var lName : String = ""
+    var allCategories : [AppCategory] = AppCategoryManager.shared.getAppCategories()
     
-    @State private var showingPassword = false
-    @State var didAuthenticate : Bool = false
-    @State var showSignInView : Bool = false
+    private let columns = Array(repeating: GridItem(.flexible()), count: 2)
     
     var body : some View {
         NavigationView {
-            VStack {
-                WelcomeViewHeader(previousView: AnyView(WelcomeView1()), currentIndex: 1)
-                    .padding(.top, 100)
+            VStack (spacing: 20) {
+                VStack {
+                    Text("How can I be")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text("of your assistance?")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(.top, 150)
+                .font(.system(size: 25, weight: .bold))
                 
-                HStack {
-                    
-                    Text("\(alex)") // TODO: Replace with image of Alex
-                        .font(.system(size: 100))
-                    
-                    Text("First, let's get you an account set up with us!")
-                        .padding()
-                        .frame(
-                            width: 200,
-                            height: 150
-                        )
-                        .background(.white.quinary)
-                        .clipShape(.rect(cornerRadius: 25))
-                        .multilineTextAlignment(.center)
+                VStack (spacing: 5) {
+                    Text("Please choose up to 10 categories,")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text("you can always change your preferences later.")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .font(.system(size: 16))
+                .foregroundStyle(.white.opacity(0.8))
+                
+                ScrollView {
+                    LazyVGrid(columns: columns) {
+                        ForEach(allCategories, id:\.self) { category in
+                            CategorySelectionButton(appCategory: category)
+                        }
+                    }
                 }
                 
-                if !didAuthenticate {
-                    Button (
-                        action: {
-                            showSignInView = true
-                            didAuthenticate = true
-                        },
-                        label: {
-                            Text("Let's get started!")
-                                .frame(width: 250, height: 55)
-                                .background(.blue)
-                                .foregroundStyle(.white)
-                                .clipShape(.rect(cornerRadius: 20))
+                NavigationLink(
+                    destination: WelcomeView3().navigationBarBackButtonHidden(),
+                    label: {
+                        Text("Continue")
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.white)
+                            .frame(width: 350, height: 55)
+                            .background(.blue)
+                            .clipShape(.rect(cornerRadius: 45))
+                    }
+                )
+                .simultaneousGesture(TapGesture()
+                    .onEnded {
+                        Task {
+                            try context.save()
                         }
-                    )
-                } else {
-                    NavigationLink(
-                        destination: WelcomeView3().navigationBarBackButtonHidden(),
-                        label: {
-                            Text("Continue")
-                                .frame(width: 250, height: 55)
-                                .background(.blue)
-                                .foregroundStyle(.white)
-                                .clipShape(.rect(cornerRadius: 20))
-                        }
-                    )
-                }
-                
-                Spacer()
+                    }
+                )
             }
-            .fullScreenCover(isPresented: $showSignInView) {
-                NavigationStack {
-                    AuthenticationView(showSignInView: $showSignInView)
+            .toolbar {
+                ToolbarItemGroup(placement: .topBarLeading) {
+                    Button(action: { dismiss() }, label: { Image(systemName: "chevron.left") })
+                        .foregroundStyle(.white)
                 }
+                ToolbarItemGroup(placement: .principal) {
+                    ProgressView(value: 2, total: 6)
+                        .progressViewStyle(CustomProgressViewStyle(height: 15))
+                        .frame(width: 300)
+                }
+            }
+            .onAppear {
+                let appCategoryType = AppCategoryManager.AppCategoryType.self
+                context.insert(appCategoryType.finance.details)
             }
             
             .font(.system(size: 20, weight: .semibold, design: .rounded))
@@ -82,12 +87,47 @@ struct WelcomeView2 : View {
                 maxWidth: .infinity,
                 maxHeight: .infinity
             )
-            .background(Color.fromString(from: "voidBlack").gradient) // TODO: Make the custom color (dark blue)
+            .background(.voidBlack.gradient) // TODO: Make the custom color (dark blue)
             .ignoresSafeArea()
         }
     }
 }
 
+struct CategorySelectionButton : View {
+    @Environment(\.modelContext) var context
+    
+    @Query(sort: \AppCategory.title) var selectedCategories: [AppCategory]
+    var appCategory: AppCategory
+    
+    var body : some View {
+        Button (
+            action: {
+                if selectedCategories.contains(appCategory) {
+                    if let index = selectedCategories.firstIndex(of: appCategory) {
+                        context.delete(selectedCategories[index])
+                    }
+                } else {
+                    context.insert(appCategory)
+                }
+            },
+            label: {
+                HStack {
+                    Text(appCategory.title)
+                    Spacer()
+                    Image(systemName: selectedCategories.contains(appCategory) ? "checkmark.circle" : "circle")
+                }
+                .padding()
+                .foregroundStyle(.white)
+                .frame(width: 150, height: 45)
+                .background(Color.fromString(from: appCategory.color))
+                .clipShape(.rect(cornerRadius: 10))
+            }
+        )
+    }
+}
+
 #Preview {
-    WelcomeView2()
+    NavigationStack {
+        WelcomeView2()
+    }
 }

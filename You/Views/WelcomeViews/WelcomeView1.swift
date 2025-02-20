@@ -12,6 +12,8 @@ struct WelcomeView1 : View {
     let wavingHand = "👋"
     let alex = "🦊"
     
+    @State var showSignInView : Bool = false
+    
     var body : some View {
         NavigationView {
             VStack (spacing: 40) {
@@ -41,14 +43,22 @@ struct WelcomeView1 : View {
                     label: {
                         Text("Let's Get Started!")
                             .frame(
-                                width: 190,
-                                height: 40
+                                width: 350,
+                                height: 55
                             )
                             .background(.blue)
                             .clipShape(.capsule)
                             .padding(.top, 100)
                     }
                 )
+                Spacer()
+            }
+            .toolbar {
+                ToolbarItemGroup(placement: .principal) {
+                    ProgressView(value: 1, total: 6)
+                        .progressViewStyle(CustomProgressViewStyle(height: 15))
+                        .frame(width: 300)
+                }
             }
             .font(.system(size: 20, weight: .semibold, design: .rounded))
             .multilineTextAlignment(.center)
@@ -59,11 +69,17 @@ struct WelcomeView1 : View {
                 maxHeight: .infinity
             )
             .background(Color.fromString(from: "voidBlack").gradient) // TODO: Make the custom color (dark blue)
-            .ignoresSafeArea()
+            .fullScreenCover(isPresented: $showSignInView) {
+                NavigationStack {
+                    AuthenticationView(showSignInView: $showSignInView)
+                }
+            }
         }
     }
 }
 
 #Preview {
-    WelcomeView1()
+    NavigationStack {
+        WelcomeView1()
+    }
 }

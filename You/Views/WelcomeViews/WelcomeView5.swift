@@ -8,43 +8,41 @@
 import SwiftUI
 
 struct WelcomeView5 : View {
+    @Environment(\.dismiss) private var dismiss
     @AppStorage("backgroundColor") var backgroundColor: String?
     @AppStorage("isWelcomeOver") var isWelcomeOver : Bool?
     
     var body : some View {
         NavigationStack {
             VStack (spacing: 20) {
-                WelcomeViewHeader(previousView: AnyView(WelcomeView4()), currentIndex: 4)
-                    .padding(.top, 100)
                 
-                Text("How may I be of your assistance? \n\nPlease choose up to 10 categories. \nYou can always change your preferences later!")
-                    .padding()
-                    .frame(
-                        width: 375,
-                        height: 175
-                    )
-                    .background(.white.quinary)
-                    .clipShape(.rect(cornerRadius: 25))
-                    .multilineTextAlignment(.center)
+                // TODO: Once App is in BETA, add notifications
                 
-                ScrollView {
-                    // TODO: use app storage to save preferences to Firebase
-                }
-                
+//                Image(systemName: "bell.fill")
+//                Text("Turn on notifications to get the")
+//                Text("most out of You")
+//                
+//                HStack {
+//                    VStack {
+//                        Text("Stay updated")
+//                        Text("Support, inspiration, and reminders to keep")
+//                        Text("your best foot foward.")
+//                    }
+//                    
+//                }
+
+                Spacer()
                 NavigationLink(
                     destination: ContentView().navigationBarBackButtonHidden(),
                     label: {
-                        Text("Finish")
-                            .frame(
-                                width: 150,
-                                height: 55
-                            )
-                            .background(.blue)
-                            .clipShape(.capsule)
-                            .padding(.top, 50)
-                            .padding(.bottom, 50)
+                        Text("Continue")
+                            .fontWeight(.semibold)
                     }
                 )
+                .frame(width: 350, height: 55)
+                .foregroundStyle(.white)
+                .background(.blue)
+                .clipShape(.capsule)
                 .simultaneousGesture(TapGesture()
                     .onEnded {
                         Task {
@@ -54,19 +52,29 @@ struct WelcomeView5 : View {
                     }
                 )
             }
-            .font(.system(size: 20, weight: .semibold))
-            .foregroundStyle(.white)
+            .toolbar {
+                ToolbarItemGroup(placement: .topBarLeading) {
+                    Button(action: { dismiss() }, label: { Image(systemName: "chevron.left") })
+                        .foregroundStyle(.white)
+                }
+                ToolbarItemGroup(placement: .principal) {
+                    ProgressView(value: 5, total: 6)
+                        .progressViewStyle(CustomProgressViewStyle(height: 15))
+                        .frame(width: 300)
+                }
+            }
             .padding()
             .frame(
                 maxWidth: .infinity,
                 maxHeight: .infinity
             )
             .background(Color.fromString(from: backgroundColor).gradient)
-            .ignoresSafeArea()
         }
     }
 }
 
 #Preview {
-    WelcomeView5()
+    NavigationStack {
+        WelcomeView5()
+    }
 }

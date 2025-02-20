@@ -2,79 +2,111 @@
 //  WelcomeView3.swift
 //  You
 //
-//  Created by Oliver Gilcher on 1/26/25.
+//  Created by Oliver Gilcher on 2/19/25.
 //
 
 import SwiftUI
 
 struct WelcomeView3 : View {
-    @AppStorage("username") var userName: String?
-    let alex = "🦊"
+    @Environment(\.dismiss) private var dismiss
+    @AppStorage("backgroundColor") var backgroundColor: String = "voidBlack"
     
     var body : some View {
         NavigationStack {
-            VStack (spacing: 40) {
-                WelcomeViewHeader(previousView: AnyView(WelcomeView2()), currentIndex: 2)
-                    .padding(.top, 100)
+            VStack (spacing: 20) {
+                VStack {
+                    Text("What's your favorite")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text("color style?")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .font(.system(size: 25, weight: .bold))
                 
-                Text("\(alex)") // TODO: Replace with image of Alex
-                    .font(.system(size: 100))
+                VStack (spacing: 5) {
+                    Text("Bright or bold? Cool or warm?")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text("You pick, I'll make it shine!")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .font(.system(size: 16))
+                .foregroundStyle(.white.opacity(0.8))
                 
-                Text("Now let's personalize your experience, what is your name?")
-                    .padding()
-                    .frame(
-                        width: 350,
-                        height: 100
-                    )
-                    .background(.white.quinary)
-                    .clipShape(.rect(cornerRadius: 25))
-                    .multilineTextAlignment(.center)
+                HStack (spacing: 20) {
+                    backgroundColorCard(color: "voidBlack", backgroundColor: $backgroundColor)
+                    backgroundColorCard(color: "sunriseOrange", backgroundColor: $backgroundColor)
+                    backgroundColorCard(color: "forestGreen", backgroundColor: $backgroundColor)
+                }
                 
-                TextField("Jhon", text: Binding(
-                    get: { userName ?? "" },
-                    set: { userName = $0 }
-                ))
-                .autocorrectionDisabled(true)
-                
-                .frame(width: 350)
-                .background(Color.gray.opacity(0.4))
-                .clipShape(
-                    RoundedRectangle(cornerRadius: 8)
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(.white, lineWidth: 1)
-                )
-                
-                NavigationLink(
-                    destination: WelcomeView4().navigationBarBackButtonHidden(true),
-                    label: {
-                        Text("Continue")
-                            .frame(
-                                width: 150,
-                                height: 55
-                            )
-                            .background(.blue)
-                            .clipShape(.capsule)
-                            .padding(.top, 100)
-                    }
-                )
+                HStack (spacing: 20) {
+                    backgroundColorCard(color: "sereneTeal", backgroundColor: $backgroundColor)
+                    backgroundColorCard(color: "crimsonRed", backgroundColor: $backgroundColor)
+                    backgroundColorCard(color: "lavenderMist", backgroundColor: $backgroundColor)
+                }
                 
                 Spacer()
+                
+                NavigationLink(
+                    destination: WelcomeView4().navigationBarBackButtonHidden(),
+                    label: {
+                        Text("Continue")
+                            .fontWeight(.semibold)
+                            .frame(width: 350, height: 55)
+                            .foregroundStyle(.white)
+                            .background(.blue)
+                            .clipShape(.rect(cornerRadius: 45))
+                    }
+                )
             }
-            .font(.system(size: 20, weight: .semibold))
-            .foregroundStyle(.white)
+            .toolbar {
+                ToolbarItemGroup(placement: .topBarLeading) {
+                    Button(action: { dismiss() }, label: { Image(systemName: "chevron.left") })
+                        .foregroundStyle(.white)
+                }
+                ToolbarItemGroup(placement: .principal) {
+                    ProgressView(value: 3, total: 6)
+                        .progressViewStyle(CustomProgressViewStyle(height: 15))
+                        .frame(width: 300)
+                }
+            }
             .padding()
-            .frame(
-                maxWidth: .infinity,
-                maxHeight: .infinity
-            )
-            .background(Color.fromString(from: "voidBlack").gradient)
-            .ignoresSafeArea()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.fromString(from: backgroundColor).gradient)
         }
     }
 }
 
+struct backgroundColorCard : View {
+    var color: String
+    @Binding var backgroundColor : String
+    
+    var body : some View {
+        Button (
+            action: {
+                backgroundColor = color
+            },
+            label: {
+                VStack {
+                    if backgroundColor.elementsEqual(color) {
+                        Image(systemName: "checkmark")
+                    }
+                }
+                .frame(width: 100, height: 150)
+                .background(Color.fromString(from: color))
+                .clipShape(
+                    RoundedRectangle(cornerRadius: 10)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(.white, lineWidth: 1)
+                )
+                .foregroundStyle(.white)
+            }
+        )
+    }
+}
+
 #Preview {
-    WelcomeView3()
+    NavigationStack {
+        WelcomeView3()
+    }
 }
