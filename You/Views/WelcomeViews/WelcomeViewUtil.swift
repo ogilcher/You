@@ -7,30 +7,6 @@
 
 import SwiftUI
 
-struct WelcomeViewHeader : View {
-    var previousView : AnyView?
-    var currentIndex : Int
-    
-    var body : some View {
-        HStack {
-            NavigationLink(
-                destination: previousView?.navigationBarBackButtonHidden(true),
-                label: {
-                    Image(systemName: "chevron.left")
-                }
-            )
-            .font(.system(size: 20, weight: .semibold, design: .rounded))
-            .foregroundStyle(.white)
-            
-            ProgressView(value: Double(currentIndex), total: 6)
-            .progressViewStyle(CustomProgressViewStyle(height:15)) // Custom height
-            .frame(width: 350) // Fixed width
-                
-                
-        }
-    }
-}
-
 struct CustomProgressViewStyle: ProgressViewStyle {
     var height: CGFloat
     
@@ -52,8 +28,4 @@ struct CustomProgressViewStyle: ProgressViewStyle {
         }
         .frame(height: height) // Ensure the whole container doesn't exceed the defined height
     }
-}
-
-#Preview {
-    WelcomeViewHeader(previousView: AnyView(WelcomeView1()), currentIndex: 3)
 }

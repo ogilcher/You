@@ -35,7 +35,7 @@ struct WelcomeView5 : View {
                 NavigationLink(
                     destination: ContentView().navigationBarBackButtonHidden(),
                     label: {
-                        Text("Continue")
+                        Text("Finish")
                             .fontWeight(.semibold)
                     }
                 )
@@ -63,11 +63,9 @@ struct WelcomeView5 : View {
                         .frame(width: 300)
                 }
             }
+            .foregroundStyle(.white)
             .padding()
-            .frame(
-                maxWidth: .infinity,
-                maxHeight: .infinity
-            )
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color.fromString(from: backgroundColor).gradient)
         }
     }

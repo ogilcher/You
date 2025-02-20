@@ -7,18 +7,19 @@
 
 import SwiftUI
 
+// App-setup View that handles App purchase subscription
 struct WelcomeView4 : View {
-    @Environment(\.dismiss) private var dismiss
-    @AppStorage("backgroundColor") var backgroundColor: String = "voidBlack"
+    @Environment(\.dismiss) private var dismiss // Dismiss view
+    @AppStorage("backgroundColor") var backgroundColor: String = "voidBlack" // Appstorage value for background color
     
-    @State private var isAnnual: Bool = true
-    private var switcherHeight: CGFloat = 30
-    private var switcherWidth: CGFloat = 150
-    private var switcherRadius: CGFloat = 10
+    @State private var isAnnual: Bool = true // Conditional for subscription period
+    private var switcherHeight: CGFloat = 30 // Height for annual/monthly switcher
+    private var switcherWidth: CGFloat = 150 // Width for annual/monthly switcher
+    private var switcherRadius: CGFloat = 10 // Corner radius for annual/monthly switcher
     
     var body : some View {
         NavigationStack {
-            VStack (spacing: 20) {
+            VStack (spacing: 20) { // Title
                 VStack {
                     Text("How your trial works")
                         .font(.system(size: 20, weight: .semibold))
@@ -28,21 +29,27 @@ struct WelcomeView4 : View {
                         .foregroundStyle(.white.opacity(0.8))
                 }
                 
-                HStack {
+                HStack { // Subtitle
                     Spacer()
+                    
+                    // Annual option
                     Button { isAnnual = true } label: {
                         Text("Annual")
                     }
                     .frame(width: switcherWidth/2, height: switcherHeight)
                     .background(isAnnual ? Color.white.opacity(0.4) : Color.clear)
                     .clipShape(.rect(cornerRadius: switcherRadius))
+                    
                     Spacer()
+                    
+                    // Monthly option
                     Button { isAnnual = false } label: {
                         Text("Monthly")
                     }
                     .frame(width: switcherWidth/2, height: switcherHeight)
                     .background(!isAnnual ? Color.white.opacity(0.4) : Color.clear)
                     .clipShape(.rect(cornerRadius: switcherRadius))
+                    
                     Spacer()
                 }
                 .font(.system(size: 16, weight: .semibold))
@@ -54,9 +61,9 @@ struct WelcomeView4 : View {
                         .stroke(.white.quinary, lineWidth: 2)
                 )
                 
-                SubscriptionInfoGraphic()
+                SubscriptionInfoGraphic() // Infographic for trial process
                 
-                Button{
+                Button { // Restore purchases action
                     // TODO: Restoration of App purchases
                 } label: {
                     Text("Restore purchase")
@@ -65,7 +72,8 @@ struct WelcomeView4 : View {
                 }
                 
                 Spacer()
-                VStack {
+                
+                VStack { // Subscribe action
                     Text("Cancel anytime in the App Store")
                     Button(
                         action: {
@@ -75,13 +83,13 @@ struct WelcomeView4 : View {
                             Text("Try for $0.00")
                         }
                     )
-                    .fontWeight(.semibold)
                     .foregroundStyle(.white)
+                    .fontWeight(.semibold)
                     .frame(width: 350, height: 55)
                     .background(.blue)
-                    .clipShape(.rect(cornerRadius: 45))
+                    .clipShape(.capsule)
                     
-                    NavigationLink(
+                    NavigationLink( // Optional, no thanks button
                         destination: WelcomeView5().navigationBarBackButtonHidden(),
                         label: {
                             Text("No thanks.")
@@ -101,27 +109,27 @@ struct WelcomeView4 : View {
                         .frame(width: 300)
                 }
             }
+            .foregroundStyle(.white)
             .padding()
-            .frame(
-                maxWidth: .infinity,
-                maxHeight: .infinity
-            )
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color.fromString(from: backgroundColor).gradient)
         }
     }
 }
 
+// Visual representation of the trial period and it's process
 struct SubscriptionInfoGraphic : View {
     var body : some View {
         HStack (spacing: 20) {
             ZStack (alignment: .top) {
-                VStack {
+                VStack { // Faded rectangle
                     Rectangle()
                         .fill(LinearGradient(colors: [.yellow, .black], startPoint: .top, endPoint: .bottom))
                 }
                 .padding(.top)
                 .frame(width: 15, height: 250)
-                VStack (spacing: 40) {
+                
+                VStack (spacing: 40) { // Icons
                     Image(systemName: "lock.open.fill")
                         .frame(width: 40, height: 40)
                         .foregroundStyle(.black)
@@ -141,7 +149,8 @@ struct SubscriptionInfoGraphic : View {
                 }
                 .font(.system(size: 14, weight: .bold))
             }
-            VStack (spacing: 25) {
+            
+            VStack (spacing: 25) { // Text to the right of the icons
                 VStack {
                     Text("Today")
                         .foregroundStyle(.white)
@@ -154,6 +163,7 @@ struct SubscriptionInfoGraphic : View {
                         .foregroundStyle(.white.opacity(0.4))
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
+                
                 VStack {
                     Text("In 12 days")
                         .foregroundStyle(.white)

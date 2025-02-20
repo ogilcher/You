@@ -7,51 +7,53 @@
 
 import SwiftUI
 
+// App-setup View that handles Auth & Starts setup process
 struct WelcomeView1 : View {
+    @State var showSignInView : Bool = false // Conditional on Auth state
     
+    // Emoji values
     let wavingHand = "👋"
     let alex = "🦊"
-    
-    @State var showSignInView : Bool = false
     
     var body : some View {
         NavigationView {
             VStack (spacing: 40) {
-                
                 // TODO: Replace with image of Alex
                 Text("\(alex)")
                     .font(.system(size: 100))
                 
-                VStack (spacing: 40) {
+                VStack { // Title
                     Text("Welcome to You! \(wavingHand)")
-                        .font(.system(size: 24, weight: .bold, design: .rounded))
-                    
-                    Text("Hi there! I'm Alex, your personal guide. I'm here to help you stay on track, feel your best, and achieve your goals.")
-                    
-                    Text("Let's make this app feel like home to you!")
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .padding()
-                .frame(
-                    width: 350,
-                    height: 300
-                )
-                .background(.white.quinary)
-                .clipShape(.rect(cornerRadius: 25))
+                .font(.system(size: 25, weight: .bold))
                 
-                NavigationLink(
+                VStack (spacing: 5) { // Subtitle
+                    Text("Hi there! I'm Alex, your personal guide.")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text("I'm here to help you stay on track,")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text("feel your best, and achieve your goals.")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text("Let's make this app feel like home to you!")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .font(.system(size: 18))
+                .foregroundStyle(.white.opacity(0.8))
+                
+                Spacer()
+                
+                NavigationLink( // Continue button
                     destination: WelcomeView2().navigationBarBackButtonHidden(true),
                     label: {
                         Text("Let's Get Started!")
-                            .frame(
-                                width: 350,
-                                height: 55
-                            )
+                            .foregroundStyle(.white)
+                            .fontWeight(.semibold)
+                            .frame(width: 350, height: 55)
                             .background(.blue)
                             .clipShape(.capsule)
-                            .padding(.top, 100)
                     }
                 )
-                Spacer()
             }
             .toolbar {
                 ToolbarItemGroup(placement: .principal) {
@@ -60,16 +62,11 @@ struct WelcomeView1 : View {
                         .frame(width: 300)
                 }
             }
-            .font(.system(size: 20, weight: .semibold, design: .rounded))
-            .multilineTextAlignment(.center)
             .foregroundStyle(.white)
             .padding()
-            .frame(
-                maxWidth: .infinity,
-                maxHeight: .infinity
-            )
-            .background(Color.fromString(from: "voidBlack").gradient) // TODO: Make the custom color (dark blue)
-            .fullScreenCover(isPresented: $showSignInView) {
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(.voidBlack.gradient)
+            .fullScreenCover(isPresented: $showSignInView) { // cover for if auth isn't handled
                 NavigationStack {
                     AuthenticationView(showSignInView: $showSignInView)
                 }

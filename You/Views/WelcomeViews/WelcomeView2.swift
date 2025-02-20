@@ -8,36 +8,38 @@
 import SwiftUI
 import SwiftData
 
+// App-setup View that handles AppCategory selection
 struct WelcomeView2 : View {
-    @Environment(\.dismiss) private var dismiss
-    @Environment(\.modelContext) var context
+    @Environment(\.dismiss) private var dismiss // Dismiss view
+    @Environment(\.modelContext) var context // Data storage context
     
-    var allCategories : [AppCategory] = AppCategoryManager.shared.getAppCategories()
-    
-    private let columns = Array(repeating: GridItem(.flexible()), count: 2)
+    private var allCategories : [AppCategory] = AppCategoryManager.shared.getAppCategories() // List of all available app categories
+    private let columns = Array(repeating: GridItem(.flexible()), count: 2) // Columns attribute for use in LazyVGrid
     
     var body : some View {
         NavigationView {
             VStack (spacing: 20) {
-                VStack {
+                
+                VStack { // Title
                     Text("How can I be")
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Text("of your assistance?")
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .padding(.top, 150)
                 .font(.system(size: 25, weight: .bold))
                 
-                VStack (spacing: 5) {
+                VStack (spacing: 5) { // Subtitle
                     Text("Please choose up to 10 categories,")
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Text("you can always change your preferences later.")
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .font(.system(size: 16))
+                .font(.system(size: 18))
                 .foregroundStyle(.white.opacity(0.8))
                 
-                ScrollView {
+                Spacer()
+                
+                ScrollView { // List of categories
                     LazyVGrid(columns: columns) {
                         ForEach(allCategories, id:\.self) { category in
                             CategorySelectionButton(appCategory: category)
@@ -45,30 +47,35 @@ struct WelcomeView2 : View {
                     }
                 }
                 
-                NavigationLink(
-                    destination: WelcomeView3().navigationBarBackButtonHidden(),
+                Spacer()
+                
+                NavigationLink ( // Continue Button
+                    destination: WelcomeView3().navigationBarBackButtonHidden(true),
                     label: {
                         Text("Continue")
-                            .fontWeight(.semibold)
                             .foregroundStyle(.white)
+                            .fontWeight(.semibold)
                             .frame(width: 350, height: 55)
                             .background(.blue)
-                            .clipShape(.rect(cornerRadius: 45))
+                            .clipShape(.capsule)
                     }
                 )
                 .simultaneousGesture(TapGesture()
                     .onEnded {
                         Task {
+                            // Save the context when done
                             try context.save()
                         }
                     }
                 )
             }
             .toolbar {
+                // Back button
                 ToolbarItemGroup(placement: .topBarLeading) {
                     Button(action: { dismiss() }, label: { Image(systemName: "chevron.left") })
                         .foregroundStyle(.white)
                 }
+                // Custom progress bar
                 ToolbarItemGroup(placement: .principal) {
                     ProgressView(value: 2, total: 6)
                         .progressViewStyle(CustomProgressViewStyle(height: 15))
@@ -79,25 +86,20 @@ struct WelcomeView2 : View {
                 let appCategoryType = AppCategoryManager.AppCategoryType.self
                 context.insert(appCategoryType.finance.details)
             }
-            
-            .font(.system(size: 20, weight: .semibold, design: .rounded))
             .foregroundStyle(.white)
             .padding()
-            .frame(
-                maxWidth: .infinity,
-                maxHeight: .infinity
-            )
-            .background(.voidBlack.gradient) // TODO: Make the custom color (dark blue)
-            .ignoresSafeArea()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(.voidBlack.gradient)
         }
     }
 }
 
+// Selection button for categories
 struct CategorySelectionButton : View {
-    @Environment(\.modelContext) var context
+    @Environment(\.modelContext) var context // Data storage context
+    @Query(sort: \AppCategory.title) var selectedCategories: [AppCategory] // Data model of stored 'selectedCategories'
     
-    @Query(sort: \AppCategory.title) var selectedCategories: [AppCategory]
-    var appCategory: AppCategory
+    var appCategory: AppCategory // param: app category we wish to use
     
     var body : some View {
         Button (
@@ -112,9 +114,9 @@ struct CategorySelectionButton : View {
             },
             label: {
                 HStack {
-                    Text(appCategory.title)
+                    Text(appCategory.title) // App category's title
                     Spacer()
-                    Image(systemName: selectedCategories.contains(appCategory) ? "checkmark.circle" : "circle")
+                    Image(systemName: selectedCategories.contains(appCategory) ? "checkmark.circle" : "circle") // Indicator of selection
                 }
                 .padding()
                 .foregroundStyle(.white)
