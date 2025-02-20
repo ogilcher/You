@@ -9,7 +9,7 @@ import SwiftUI
 
 // App-setup View that handles Auth & Starts setup process
 struct WelcomeView1 : View {
-    @State var showSignInView : Bool = false // Conditional on Auth state
+    @State var showSignInView : Bool = true // Conditional on Auth state
     
     // Emoji values
     let wavingHand = "👋"

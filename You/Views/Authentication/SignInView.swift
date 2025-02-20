@@ -78,6 +78,7 @@ struct SignInView : View {
                     Spacer()
                 }
             }
+            .ignoresSafeArea(.keyboard, edges: .bottom)
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(.voidBlack.gradient)

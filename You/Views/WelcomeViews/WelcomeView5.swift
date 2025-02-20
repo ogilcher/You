@@ -10,7 +10,7 @@ import SwiftUI
 struct WelcomeView5 : View {
     @Environment(\.dismiss) private var dismiss
     @AppStorage("backgroundColor") var backgroundColor: String?
-    @AppStorage("isWelcomeOver") var isWelcomeOver : Bool?
+    @AppStorage("isWelcomeOver") var isWelcomeOver = false
     
     var body : some View {
         NavigationStack {
@@ -31,9 +31,8 @@ struct WelcomeView5 : View {
 //                    
 //                }
 
-                Spacer()
                 NavigationLink(
-                    destination: ContentView().navigationBarBackButtonHidden(),
+                    destination: ContentView().navigationBarBackButtonHidden(true),
                     label: {
                         Text("Finish")
                             .fontWeight(.semibold)
@@ -45,8 +44,7 @@ struct WelcomeView5 : View {
                 .clipShape(.capsule)
                 .simultaneousGesture(TapGesture()
                     .onEnded {
-                        Task {
-                            // Save the user's category preferences
+                        DispatchQueue.main.async {
                             isWelcomeOver = true
                         }
                     }
@@ -66,7 +64,7 @@ struct WelcomeView5 : View {
             .foregroundStyle(.white)
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.fromString(from: backgroundColor).gradient)
+            .background(Color.fromString(from: backgroundColor ?? "voidBlack").gradient)
         }
     }
 }

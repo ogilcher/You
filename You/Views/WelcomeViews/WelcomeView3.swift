@@ -47,7 +47,7 @@ struct WelcomeView3 : View {
                 Spacer()
                 
                 NavigationLink( // Continue button
-                    destination: WelcomeView4().navigationBarBackButtonHidden(),
+                    destination: WelcomeView4().navigationBarBackButtonHidden(true),
                     label: {
                         Text("Continue")
                             .fontWeight(.semibold)

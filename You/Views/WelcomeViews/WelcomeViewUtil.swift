@@ -11,21 +11,15 @@ struct CustomProgressViewStyle: ProgressViewStyle {
     var height: CGFloat
     
     func makeBody(configuration: Configuration) -> some View {
-        HStack {
-            Spacer() // Center the progress bar horizontally
-            
-            ZStack(alignment: .leading) {
-                RoundedRectangle(cornerRadius: height / 2)
-                    .frame(height: height) // Set the desired height
-                    .foregroundColor(.gray.opacity(0.3))
-                
-                RoundedRectangle(cornerRadius: height / 2)
-                    .frame(width: CGFloat(configuration.fractionCompleted ?? 0) * 300, height: height) // Adjust width based on progress
-                    .foregroundColor(.white) // Tint color of the progress bar
-            }
-            
-            Spacer() // Center the progress bar horizontally
+        ZStack(alignment: .leading) {
+            RoundedRectangle(cornerRadius: height / 2)
+                .frame(height: height)
+                .foregroundColor(.gray.opacity(0.3))
+
+            RoundedRectangle(cornerRadius: height / 2)
+                .frame(width: max(CGFloat(configuration.fractionCompleted ?? 0) * 300, 0), height: height) // Ensure width doesn't go negative
+                .foregroundColor(.white)
         }
-        .frame(height: height) // Ensure the whole container doesn't exceed the defined height
+        .frame(maxWidth: .infinity, minHeight: height) // Make it flexible
     }
 }

@@ -10,7 +10,7 @@ import SwiftUI
 // App-setup View that handles App purchase subscription
 struct WelcomeView4 : View {
     @Environment(\.dismiss) private var dismiss // Dismiss view
-    @AppStorage("backgroundColor") var backgroundColor: String = "voidBlack" // Appstorage value for background color
+    @AppStorage("backgroundColor") var backgroundColor: String? // Appstorage value for background color
     
     @State private var isAnnual: Bool = true // Conditional for subscription period
     private var switcherHeight: CGFloat = 30 // Height for annual/monthly switcher
@@ -30,8 +30,6 @@ struct WelcomeView4 : View {
                 }
                 
                 HStack { // Subtitle
-                    Spacer()
-                    
                     // Annual option
                     Button { isAnnual = true } label: {
                         Text("Annual")
@@ -40,8 +38,6 @@ struct WelcomeView4 : View {
                     .background(isAnnual ? Color.white.opacity(0.4) : Color.clear)
                     .clipShape(.rect(cornerRadius: switcherRadius))
                     
-                    Spacer()
-                    
                     // Monthly option
                     Button { isAnnual = false } label: {
                         Text("Monthly")
@@ -49,8 +45,6 @@ struct WelcomeView4 : View {
                     .frame(width: switcherWidth/2, height: switcherHeight)
                     .background(!isAnnual ? Color.white.opacity(0.4) : Color.clear)
                     .clipShape(.rect(cornerRadius: switcherRadius))
-                    
-                    Spacer()
                 }
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundStyle(.white)
@@ -88,15 +82,15 @@ struct WelcomeView4 : View {
                     .frame(width: 350, height: 55)
                     .background(.blue)
                     .clipShape(.capsule)
-                    
-                    NavigationLink( // Optional, no thanks button
-                        destination: WelcomeView5().navigationBarBackButtonHidden(),
-                        label: {
-                            Text("No thanks.")
-                        }
-                    )
-                    .foregroundStyle(.white.opacity(0.8))
                 }
+                
+                NavigationLink( // Optional, no thanks button
+                    destination: WelcomeView5().navigationBarBackButtonHidden(true),
+                    label: {
+                        Text("No thanks.")
+                    }
+                )
+                .foregroundStyle(.white.opacity(0.8))
             }
             .toolbar {
                 ToolbarItemGroup(placement: .topBarLeading) {
