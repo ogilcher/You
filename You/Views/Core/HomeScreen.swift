@@ -34,7 +34,7 @@ struct HomeScreen : View {
             }.onAppear {
                 welcomeMessage = getRandomWelcomeMessage()
             }
-            
+            .foregroundStyle(.white)
             .font(.system(size: 20))
             .frame(
                 maxWidth: .infinity, maxHeight: .infinity

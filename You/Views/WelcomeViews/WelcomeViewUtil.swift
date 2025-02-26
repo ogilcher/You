@@ -9,17 +9,21 @@ import SwiftUI
 
 struct CustomProgressViewStyle: ProgressViewStyle {
     var height: CGFloat
-    
+    var maxWidth: CGFloat = 300 // Define a max width for flexibility
+
     func makeBody(configuration: Configuration) -> some View {
-        ZStack(alignment: .leading) {
+        let progress = min(max(configuration.fractionCompleted ?? 0, 0), 1) // Ensure it's between 0 and 1
+        let progressWidth = progress * maxWidth
+
+        return ZStack(alignment: .leading) {
             RoundedRectangle(cornerRadius: height / 2)
-                .frame(height: height)
+                .frame(width: maxWidth, height: height)
                 .foregroundColor(.gray.opacity(0.3))
 
             RoundedRectangle(cornerRadius: height / 2)
-                .frame(width: max(CGFloat(configuration.fractionCompleted ?? 0) * 300, 0), height: height) // Ensure width doesn't go negative
+                .frame(width: progressWidth, height: height)
                 .foregroundColor(.white)
         }
-        .frame(maxWidth: .infinity, minHeight: height) // Make it flexible
+        .frame(width: maxWidth, height: height)
     }
 }
