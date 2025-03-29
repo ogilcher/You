@@ -21,8 +21,6 @@ struct CustomToggle: View {
     
     var body: some View {
         VStack {
-            Text(isOn.description) // Debugging output
-            
             ZStack {
                 Capsule()
                     .fill(backgroundColor)

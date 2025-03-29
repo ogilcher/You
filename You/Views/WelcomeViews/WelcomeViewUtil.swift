@@ -18,12 +18,34 @@ struct CustomProgressViewStyle: ProgressViewStyle {
         return ZStack(alignment: .leading) {
             RoundedRectangle(cornerRadius: height / 2)
                 .frame(width: maxWidth, height: height)
-                .foregroundColor(.gray.opacity(0.3))
+                .foregroundStyle(.gray.opacity(0.3))
 
             RoundedRectangle(cornerRadius: height / 2)
                 .frame(width: progressWidth, height: height)
-                .foregroundColor(.white)
+                .foregroundStyle(.white)
         }
         .frame(width: maxWidth, height: height)
+    }
+}
+
+struct ColoredCustomProgressViewStyle: ProgressViewStyle {
+    var height: CGFloat
+    var width: CGFloat
+    
+    var baseColor: Color
+    var frontColor: Color
+    
+    func makeBody(configuration: Configuration) -> some View {
+        let progress = min(max(configuration.fractionCompleted ?? 0, 0), 1) // Ensure it's beween 0 and 1
+        let progressWidth = progress * width
+        
+        return ZStack(alignment: .leading) {
+            RoundedRectangle(cornerRadius: height / 2)
+                .frame(width: width, height: height)
+                .foregroundStyle(baseColor)
+            RoundedRectangle(cornerRadius: height / 2)
+                .frame(width: progressWidth, height: height)
+                .foregroundStyle(frontColor)
+        }
     }
 }

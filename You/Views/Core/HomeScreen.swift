@@ -9,7 +9,6 @@ import SwiftUI
 import SwiftData
 
 struct HomeScreen : View {
-    @AppStorage("backgroundColor") var backgroundColor: String?
     @AppStorage("username") var username: String?
     
     @State private var welcomeMessage = ""
@@ -41,7 +40,7 @@ struct HomeScreen : View {
             )
             .ignoresSafeArea()
             .padding(.horizontal)
-            .background(Color.fromString(from: backgroundColor).gradient)
+            .background(LinearGradient(colors: [.color1, .color2], startPoint: .top, endPoint: .bottom))
         }
     }
     
@@ -67,14 +66,14 @@ struct HomeScreenHeader : View {
     var body : some View {
         HStack {
             NavigationLink(
-                destination: AllCategoriesView().navigationBarBackButtonHidden(),
+                destination: AllCategoriesView().navigationBarBackButtonHidden(true),
                 label: {
                     Image(systemName: "circle.hexagongrid")
                 }
             )
             Spacer()
             NavigationLink(
-                destination: SettingsView(previousView: AnyView(HomeScreen())).navigationBarBackButtonHidden(),
+                destination: SettingsView(previousView: AnyView(HomeScreen())).navigationBarBackButtonHidden(true),
                 label: {
                     Image(systemName: "line.3.horizontal")
                 }

@@ -79,7 +79,7 @@ struct LandingPageFeatured : View {
                 .font(.system(size: 12))
             
             NavigationLink(
-                destination: destination,
+                destination: destination.navigationBarBackButtonHidden(true),
                 label: {
                     HStack {
                         Image(systemName: "lock.fill")

@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     
     @State private var showSignInView: Bool = false
-    @AppStorage("isWelcomeOver") var isWelcomeOver = false
+    @AppStorage("isWelcomeOver") var isWelcomeOver = true
     
     var body: some View {
         VStack {

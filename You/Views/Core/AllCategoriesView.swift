@@ -10,7 +10,6 @@ import SwiftData
 
 struct AllCategoriesView: View {
     @Environment(\.dismiss) private var dismiss
-    @AppStorage("backgroundColor") private var backgroundColor: String?
     
     @Environment(\.modelContext) var context
     @Query(sort: \AppCategory.title) var selectedCategories: [AppCategory]
@@ -69,24 +68,28 @@ struct AllCategoriesView: View {
                         .stroke(.ultraThickMaterial, lineWidth: 4)
                 )
             }
+            .foregroundStyle(.white)
+            .font(.system(size: 20))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding()
-            .background(Color.fromString(from: backgroundColor).gradient)
-        }
-        .sheet(isPresented: $isSheetPresented) {
-            CategoryEditor(isPresented: $isSheetPresented)
-        }
-        
-        .navigationTitle("Finance")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItemGroup(placement: .topBarLeading) {
-                Button(
-                    action: {dismiss()},
-                    label: {Image(systemName: "chevron.left")}
-                )
-                .foregroundStyle(.white)
+            .background(LinearGradient(colors: [.color1, .color2], startPoint: .top, endPoint: .bottom))
+            
+            .sheet(isPresented: $isSheetPresented) {
+                CategoryEditor(isPresented: $isSheetPresented)
             }
+            .toolbar {
+                ToolbarItemGroup(placement: .topBarLeading) {
+                    Button(
+                        action: {dismiss()},
+                        label: {Image(systemName: "chevron.left")}
+                    )
+                }
+                ToolbarItemGroup(placement: .principal) {
+                    Text("Category Selector")
+                }
+            }
+            .foregroundStyle(.white)
+            .font(.system(size: 20, weight: .semibold))
         }
     }
 }
