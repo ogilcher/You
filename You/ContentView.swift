@@ -13,24 +13,26 @@ struct ContentView: View {
     @AppStorage("isWelcomeOver") var isWelcomeOver = true
     
     var body: some View {
-        VStack {
-            if isWelcomeOver {
-                HomeScreen()
-                    .onAppear{
-                        let authUser = try? AuthenticationManager.shared.getAuthenticatedUser()
-                        self.showSignInView = authUser == nil
-                    }
-                    .fullScreenCover(isPresented: $showSignInView) {
-                        NavigationStack {
-                            AuthenticationView(showSignInView: $showSignInView)
+        NavigationStack {
+            VStack {
+                if isWelcomeOver {
+                    HomeScreen()
+                        .onAppear{
+                            let authUser = try? AuthenticationManager.shared.getAuthenticatedUser()
+                            self.showSignInView = authUser == nil
                         }
-                    }
-            } else {
-                WelcomeView1()
+                        .fullScreenCover(isPresented: $showSignInView) {
+                            NavigationStack {
+                                AuthenticationView(showSignInView: $showSignInView)
+                            }
+                        }
+                } else {
+                    WelcomeView1()
+                }
             }
-        }
-        .onAppear{
-            isWelcomeOver = isWelcomeOver
+            .onAppear{
+                isWelcomeOver = isWelcomeOver
+            }
         }
     }
 }

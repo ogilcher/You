@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 final class HomeScreenViewModel : ObservableObject {
     @Published private(set) var user: DBUser? = nil
     

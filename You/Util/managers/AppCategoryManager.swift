@@ -66,11 +66,12 @@ final class AppCategoryManager {
     }
     
     enum AppCategoryType: String, CaseIterable {
-        case finance/*, education, productivity, homeManagement, career, travel, shopping, relationships, mentalHealth, creativeHobbies, petCare, automotive, techManagement, social, selfImprovement, emergencyPrep, parenting, dining, sustainability, gaming*/
+        case finance, health/*, education, productivity, homeManagement, career, travel, shopping, relationships, mentalHealth, creativeHobbies, petCare, automotive, techManagement, social, selfImprovement, emergencyPrep, parenting, dining, sustainability, gaming*/
         
         var details: AppCategory {
             switch self {
-            case .finance: return AppCategory(title: "Finance", image: "dollarsign", color: "lushForest", destination: "Finance_Landing")
+            case .finance: return AppCategory(title: "Finance", image: "dollarsign", color: "lushForest", destination: "FinanceLanding")
+            case .health: return AppCategory(title: "Health", image: "heart", color: "deepCranberry", destination: "HealthLanding")
             //case .education: return AppCategory(title: "Education", image: "graduationcap.fill", color: Color.blue, destination: AnyView())
 //            default: return AppCategory(title: "Homescreen", image: "house.fill", color: "slateGray", destination: "HomeScreen")
             }

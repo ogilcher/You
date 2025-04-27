@@ -14,38 +14,36 @@ struct HomeScreen : View {
     @State private var welcomeMessage = ""
         
     var body: some View {
-        NavigationStack {
-            VStack (spacing: 40) {
-                HomeScreenHeader()
-                    .padding(.top, 75)
+        VStack (spacing: 40) {
+            HomeScreenHeader()
+                .padding(.top, 75)
+            
+            Text(welcomeMessage)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
+                .frame(height: 50)
+            
+            NotificationBar()
+            
+            Spacer()
+            
+            CircleView()
                 
-                Text(welcomeMessage)
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 50)
-                
-                NotificationBar()
-                
-                Spacer()
-                
-                CircleView()
-                    
-            }.onAppear {
-                self.username = viewModel.user?.fName ?? ""
-                welcomeMessage = getRandomWelcomeMessage()
-            }
-            .task {
-                try? await viewModel.loadCurrentUser()
-            }
-            .foregroundStyle(.white)
-            .font(.system(size: 20))
-            .frame(
-                maxWidth: .infinity, maxHeight: .infinity
-            )
-            .ignoresSafeArea()
-            .padding(.horizontal)
-            .background(LinearGradient(colors: [.color1, .color2], startPoint: .top, endPoint: .bottom))
+        }.onAppear {
+            self.username = viewModel.user?.fName ?? ""
+            welcomeMessage = getRandomWelcomeMessage()
         }
+        .task {
+            try? await viewModel.loadCurrentUser()
+        }
+        .foregroundStyle(.white)
+        .font(.system(size: 20))
+        .frame(
+            maxWidth: .infinity, maxHeight: .infinity
+        )
+        .ignoresSafeArea()
+        .padding(.horizontal)
+        .background(LinearGradient(colors: [.color1, .color2], startPoint: .top, endPoint: .bottom))
     }
     
     func getRandomWelcomeMessage() -> String {
@@ -264,7 +262,6 @@ extension CircleView {
             .opacity(isDistance == 0 ? 0.0 : 1.0)
     }
 }
-
 
 #Preview {
     HomeScreen()

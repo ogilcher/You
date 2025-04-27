@@ -19,78 +19,76 @@ struct AllCategoriesView: View {
     private let columns = Array(repeating: GridItem(.flexible()), count: 2)
     
     var body: some View {
-        NavigationStack {
-            VStack (spacing: 30) {
-                Text("Selected Categories")
-                    .font(.system(size: 20, weight: .semibold))
-                VStack {
-                    HStack {
-                        Spacer()
-                        Button (
-                            action: {
-                                isSheetPresented = true
-                            },
-                            label: {
-                                Text("Edit")
-                                    .font(.system(size: 18, weight: .semibold))
-                                    .padding(.trailing, 20)
-                            }
-                        )
-                    }
-                    ScrollView(.horizontal) {
-                        HStack {
-                            ForEach(selectedCategories) { category in
-                                SelectedCategoryButton(category: category)
-                            }
+        VStack (spacing: 30) {
+            Text("Selected Categories")
+                .font(.system(size: 20, weight: .semibold))
+            VStack {
+                HStack {
+                    Spacer()
+                    Button (
+                        action: {
+                            isSheetPresented = true
+                        },
+                        label: {
+                            Text("Edit")
+                                .font(.system(size: 18, weight: .semibold))
+                                .padding(.trailing, 20)
                         }
-                    }
-                    .padding()
-                    .frame(width: 350, height: 60)
-                    .clipShape(.rect(cornerRadius: 10))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(.ultraThickMaterial, lineWidth: 4)
                     )
                 }
-                
-                Text("All Categories")
-                    .font(.system(size: 20, weight: .semibold))
-                
-                LazyVGrid(columns: columns, spacing: 10) {
-                    ForEach(AppCategoryManager.shared.getAppCategories()) { category in
-                        CategoryButton(category: category)
+                ScrollView(.horizontal) {
+                    HStack {
+                        ForEach(selectedCategories) { category in
+                            SelectedCategoryButton(category: category)
+                        }
                     }
                 }
                 .padding()
+                .frame(width: 350, height: 60)
                 .clipShape(.rect(cornerRadius: 10))
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(.ultraThickMaterial, lineWidth: 4)
                 )
             }
-            .foregroundStyle(.white)
-            .font(.system(size: 20))
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding()
-            .background(LinearGradient(colors: [.color1, .color2], startPoint: .top, endPoint: .bottom))
             
-            .sheet(isPresented: $isSheetPresented) {
-                CategoryEditor(isPresented: $isSheetPresented)
-            }
-            .toolbar {
-                ToolbarItemGroup(placement: .topBarLeading) {
-                    Button(
-                        action: {dismiss()},
-                        label: {Image(systemName: "chevron.left")}
-                    )
-                }
-                ToolbarItemGroup(placement: .principal) {
-                    Text("Category Selector")
+            Text("All Categories")
+                .font(.system(size: 20, weight: .semibold))
+            
+            LazyVGrid(columns: columns, spacing: 10) {
+                ForEach(AppCategoryManager.shared.getAppCategories()) { category in
+                    CategoryButton(category: category)
                 }
             }
-            .foregroundStyle(.white)
-            .font(.system(size: 20, weight: .semibold))
+            .padding()
+            .clipShape(.rect(cornerRadius: 10))
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(.ultraThickMaterial, lineWidth: 4)
+            )
         }
+        .foregroundStyle(.white)
+        .font(.system(size: 20))
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding()
+        .background(LinearGradient(colors: [.color1, .color2], startPoint: .top, endPoint: .bottom))
+        
+        .sheet(isPresented: $isSheetPresented) {
+            CategoryEditor(isPresented: $isSheetPresented)
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .topBarLeading) {
+                Button(
+                    action: {dismiss()},
+                    label: {Image(systemName: "chevron.left")}
+                )
+            }
+            ToolbarItemGroup(placement: .principal) {
+                Text("Category Selector")
+            }
+        }
+        .foregroundStyle(.white)
+        .font(.system(size: 20, weight: .semibold))
     }
 }
 
@@ -204,7 +202,7 @@ struct SelectedCategoryButton : View {
     
     var body : some View {
         NavigationLink(
-            destination: AnyView.fromString(for: category.destination).navigationBarBackButtonHidden(),
+            destination: AnyView.fromString(for: category.destination).navigationBarBackButtonHidden(true),
             label: {
                 Image(systemName: category.image)
                     .clipShape(Ellipse())
@@ -222,7 +220,7 @@ struct CategoryButton: View {
     var body : some View {
         NavigationLink(
             destination:
-                AnyView.fromString(for: category.destination).navigationBarBackButtonHidden(),
+                AnyView.fromString(for: category.destination).navigationBarBackButtonHidden(true),
             label: {
                 HStack {
                     Image(systemName: category.image)

@@ -19,16 +19,12 @@ final class SignUpEmailViewModel: ObservableObject {
 
     // Sign-up function using asynchronous Firebase calls
     func signUp() async throws {
-        print("First Name:", fName)
-        print("Last Name:", lName)
-        print("Email:", email)
-        print("Password:", password)
-        
         let authDataResult = try await AuthenticationManager.shared.createUser(email: email, password: password)
 
         let user = DBUser(userId: authDataResult.uid, email: email, fName: fName, lName: lName, photoUrl: nil, isPremium: false)
         
         try await UserManager.shared.createNewUser(user: user)
+        try await MedicineManager.shared.createNewUser()
         
         print("User UID:", authDataResult.uid)
         print("User Manager Result: ", try await UserManager.shared.getUser(userId: authDataResult.uid).fName ?? "none")

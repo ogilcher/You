@@ -10,7 +10,8 @@ import SwiftUI
 extension AnyView {
     static func fromString(for page: String) -> AnyView {
         switch (page) {
-        case "Finance_Landing" : return AnyView(FinanceLanding())
+        case "FinanceLanding" : return AnyView(FinanceLanding())
+        case "HealthLanding" : return AnyView(HealthLanding())
         case "HomeScreen" : return AnyView(HomeScreen())
         //case "Education" : return AnyView()
         default: return AnyView(HomeScreen())

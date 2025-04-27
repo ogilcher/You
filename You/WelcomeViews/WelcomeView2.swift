@@ -17,80 +17,78 @@ struct WelcomeView2 : View {
     private let columns = Array(repeating: GridItem(.flexible()), count: 2) // Columns attribute for use in LazyVGrid
     
     var body : some View {
-        NavigationView {
-            VStack (spacing: 20) {
-                
-                VStack { // Title
-                    Text("How can I be")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("of your assistance?")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .font(.system(size: 25, weight: .bold))
-                
-                VStack (spacing: 5) { // Subtitle
-                    Text("Please choose up to 10 categories,")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("you can always change your preferences later.")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .font(.system(size: 18))
-                .foregroundStyle(.white.opacity(0.8))
-                
-                Spacer()
-                
-                ScrollView { // List of categories
-                    LazyVGrid(columns: columns) {
-                        ForEach(allCategories, id:\.self) { category in
-                            CategorySelectionButton(appCategory: category)
-                        }
-                    }
-                }
-                
-                Spacer()
-                
-                NavigationLink ( // Continue Button
-                    destination: WelcomeView3().navigationBarBackButtonHidden(true),
-                    label: {
-                        Text("Continue")
-                            .foregroundStyle(.white)
-                            .fontWeight(.semibold)
-                            .frame(width: 350, height: 55)
-                            .background(.blue)
-                            .clipShape(.capsule)
-                    }
-                )
-                .simultaneousGesture(TapGesture()
-                    .onEnded {
-                        Task {
-                            // Save the context when done
-                            try context.save()
-                        }
-                    }
-                )
+        VStack (spacing: 20) {
+            
+            VStack { // Title
+                Text("How can I be")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text("of your assistance?")
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .toolbar {
-                // Back button
-                ToolbarItemGroup(placement: .topBarLeading) {
-                    Button(action: { dismiss() }, label: { Image(systemName: "chevron.left") })
+            .font(.system(size: 25, weight: .bold))
+            
+            VStack (spacing: 5) { // Subtitle
+                Text("Please choose up to 10 categories,")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text("you can always change your preferences later.")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .font(.system(size: 18))
+            .foregroundStyle(.white.opacity(0.8))
+            
+            Spacer()
+            
+            ScrollView { // List of categories
+                LazyVGrid(columns: columns) {
+                    ForEach(allCategories, id:\.self) { category in
+                        CategorySelectionButton(appCategory: category)
+                    }
+                }
+            }
+            
+            Spacer()
+            
+            NavigationLink ( // Continue Button
+                destination: WelcomeView3().navigationBarBackButtonHidden(true),
+                label: {
+                    Text("Continue")
                         .foregroundStyle(.white)
+                        .fontWeight(.semibold)
+                        .frame(width: 350, height: 55)
+                        .background(.blue)
+                        .clipShape(.capsule)
                 }
-                // Custom progress bar
-                ToolbarItemGroup(placement: .principal) {
-                    ProgressView(value: 2, total: 6)
-                        .progressViewStyle(CustomProgressViewStyle(height: 15))
-                        .frame(width: 300)
+            )
+            .simultaneousGesture(TapGesture()
+                .onEnded {
+                    Task {
+                        // Save the context when done
+                        try context.save()
+                    }
                 }
-            }
-            .onAppear {
-                let appCategoryType = AppCategoryManager.AppCategoryType.self
-                context.insert(appCategoryType.finance.details)
-            }
-            .foregroundStyle(.white)
-            .padding()
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(.voidBlack.gradient)
+            )
         }
+        .toolbar {
+            // Back button
+            ToolbarItemGroup(placement: .topBarLeading) {
+                Button(action: { dismiss() }, label: { Image(systemName: "chevron.left") })
+                    .foregroundStyle(.white)
+            }
+            // Custom progress bar
+            ToolbarItemGroup(placement: .principal) {
+                ProgressView(value: 2, total: 6)
+                    .progressViewStyle(CustomProgressViewStyle(height: 15))
+                    .frame(width: 300)
+            }
+        }
+        .onAppear {
+            let appCategoryType = AppCategoryManager.AppCategoryType.self
+            context.insert(appCategoryType.finance.details)
+        }
+        .foregroundStyle(.white)
+        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.voidBlack.gradient)
     }
 }
 

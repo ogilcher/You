@@ -10,7 +10,6 @@ import SwiftUI
 // App-setup View that handles App purchase subscription
 struct WelcomeView4 : View {
     @Environment(\.dismiss) private var dismiss // Dismiss view
-    @AppStorage("backgroundColor") var backgroundColor: String? // Appstorage value for background color
     
     @State private var isAnnual: Bool = true // Conditional for subscription period
     private var switcherHeight: CGFloat = 30 // Height for annual/monthly switcher
@@ -18,96 +17,94 @@ struct WelcomeView4 : View {
     private var switcherRadius: CGFloat = 10 // Corner radius for annual/monthly switcher
     
     var body : some View {
-        NavigationStack {
-            VStack (spacing: 20) { // Title
-                VStack {
-                    Text("How your trial works")
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundStyle(.white)
-                    Text("First 14 days free, then \(isAnnual ? "$79.99/year ($6.67/month)" : "$9.99/month")")
-                        .font(.system(size: 16))
-                        .foregroundStyle(.white.opacity(0.8))
-                }
-                
-                HStack { // Subtitle
-                    // Annual option
-                    Button { isAnnual = true } label: {
-                        Text("Annual")
-                    }
-                    .frame(width: switcherWidth/2, height: switcherHeight)
-                    .background(isAnnual ? Color.white.opacity(0.4) : Color.clear)
-                    .clipShape(.rect(cornerRadius: switcherRadius))
-                    
-                    // Monthly option
-                    Button { isAnnual = false } label: {
-                        Text("Monthly")
-                    }
-                    .frame(width: switcherWidth/2, height: switcherHeight)
-                    .background(!isAnnual ? Color.white.opacity(0.4) : Color.clear)
-                    .clipShape(.rect(cornerRadius: switcherRadius))
-                }
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(.white)
-                .frame(width: switcherWidth, height: switcherHeight)
-                .clipShape(.rect(cornerRadius: switcherRadius))
-                .overlay(
-                    RoundedRectangle(cornerRadius: switcherRadius)
-                        .stroke(.white.quinary, lineWidth: 2)
-                )
-                
-                SubscriptionInfoGraphic() // Infographic for trial process
-                
-                Button { // Restore purchases action
-                    // TODO: Restoration of App purchases
-                } label: {
-                    Text("Restore purchase")
-                        .font(.system(size: 13))
-                        .foregroundStyle(.white)
-                }
-                
-                Spacer()
-                
-                VStack { // Subscribe action
-                    Text("Cancel anytime in the App Store")
-                    Button(
-                        action: {
-                            // TODO: App purchases
-                        },
-                        label: {
-                            Text("Try for $0.00")
-                        }
-                    )
+        VStack (spacing: 20) { // Title
+            VStack {
+                Text("How your trial works")
+                    .font(.system(size: 20, weight: .semibold))
                     .foregroundStyle(.white)
-                    .fontWeight(.semibold)
-                    .frame(width: 350, height: 55)
-                    .background(.blue)
-                    .clipShape(.capsule)
+                Text("First 14 days free, then \(isAnnual ? "$79.99/year ($6.67/month)" : "$9.99/month")")
+                    .font(.system(size: 16))
+                    .foregroundStyle(.white.opacity(0.8))
+            }
+            
+            HStack { // Subtitle
+                // Annual option
+                Button { isAnnual = true } label: {
+                    Text("Annual")
                 }
+                .frame(width: switcherWidth/2, height: switcherHeight)
+                .background(isAnnual ? Color.white.opacity(0.4) : Color.clear)
+                .clipShape(.rect(cornerRadius: switcherRadius))
                 
-                NavigationLink( // Optional, no thanks button
-                    destination: WelcomeView5().navigationBarBackButtonHidden(true),
+                // Monthly option
+                Button { isAnnual = false } label: {
+                    Text("Monthly")
+                }
+                .frame(width: switcherWidth/2, height: switcherHeight)
+                .background(!isAnnual ? Color.white.opacity(0.4) : Color.clear)
+                .clipShape(.rect(cornerRadius: switcherRadius))
+            }
+            .font(.system(size: 16, weight: .semibold))
+            .foregroundStyle(.white)
+            .frame(width: switcherWidth, height: switcherHeight)
+            .clipShape(.rect(cornerRadius: switcherRadius))
+            .overlay(
+                RoundedRectangle(cornerRadius: switcherRadius)
+                    .stroke(.white.quinary, lineWidth: 2)
+            )
+            
+            SubscriptionInfoGraphic() // Infographic for trial process
+            
+            Button { // Restore purchases action
+                // TODO: Restoration of App purchases
+            } label: {
+                Text("Restore purchase")
+                    .font(.system(size: 13))
+                    .foregroundStyle(.white)
+            }
+            
+            Spacer()
+            
+            VStack { // Subscribe action
+                Text("Cancel anytime in the App Store")
+                Button(
+                    action: {
+                        // TODO: App purchases
+                    },
                     label: {
-                        Text("No thanks.")
+                        Text("Try for $0.00")
                     }
                 )
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(.white)
+                .fontWeight(.semibold)
+                .frame(width: 350, height: 55)
+                .background(.blue)
+                .clipShape(.capsule)
             }
-            .toolbar {
-                ToolbarItemGroup(placement: .topBarLeading) {
-                    Button(action: { dismiss() }, label: { Image(systemName: "chevron.left") })
-                        .foregroundStyle(.white)
+            
+            NavigationLink( // Optional, no thanks button
+                destination: WelcomeView5().navigationBarBackButtonHidden(true),
+                label: {
+                    Text("No thanks.")
                 }
-                ToolbarItemGroup(placement: .principal) {
-                    ProgressView(value: 4, total: 6)
-                        .progressViewStyle(CustomProgressViewStyle(height: 15))
-                        .frame(width: 300)
-                }
-            }
-            .foregroundStyle(.white)
-            .padding()
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.fromString(from: backgroundColor).gradient)
+            )
+            .foregroundStyle(.white.opacity(0.8))
         }
+        .toolbar {
+            ToolbarItemGroup(placement: .topBarLeading) {
+                Button(action: { dismiss() }, label: { Image(systemName: "chevron.left") })
+                    .foregroundStyle(.white)
+            }
+            ToolbarItemGroup(placement: .principal) {
+                ProgressView(value: 4, total: 6)
+                    .progressViewStyle(CustomProgressViewStyle(height: 15))
+                    .frame(width: 300)
+            }
+        }
+        .foregroundStyle(.white)
+        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.voidBlack.gradient)
     }
 }
 
